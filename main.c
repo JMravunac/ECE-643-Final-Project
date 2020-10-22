@@ -16,18 +16,12 @@ int main() {
 
 	void *virtual_base;
 	int fd;
-	int loop_count;
-	int led_direction;
-	int led_mask;
 	void *h2p_lw_led_addr;
 	void *h2p_lw_s_addr;
 	void *h2p_lw_p_addr;
 	void *p2h_lw_a_addr;
 	void *p2h_lw_b_addr;
 	
-	float a, b, p, s;
-	float *p_fpga;
-	float *s_fpga;
 
 	// map the address space for the LED registers into user space so we can interact with them.
 	// we'll actually map in the entire CSR span of the HPS since we want to access various registers within that span
@@ -50,8 +44,7 @@ int main() {
 	h2p_lw_p_addr=virtual_base + ((unsigned long)(ALT_LWFPGASLVS_OFST + P_PIO_BASE ) & ( unsigned long)( HW_REGS_MASK ) );
 	p2h_lw_a_addr=virtual_base + ((unsigned long)(ALT_LWFPGASLVS_OFST + A_PIO_BASE ) & ( unsigned long)( HW_REGS_MASK ) );
 	p2h_lw_b_addr=virtual_base + ((unsigned long)(ALT_LWFPGASLVS_OFST + B_PIO_BASE ) & ( unsigned long)( HW_REGS_MASK ) );
-	
-	int select = 0;	
+		
 	int loop = 1;
 	int select = 0;
 	int select_value = 0;
@@ -79,180 +72,183 @@ int main() {
 	
 	while(1)
 	{
+Start:		
+		printf("select Pedal to Adjust:\n");
+		printf("1: Distortion\n");
+		printf("2: Loop\n");
+		printf("3: Chorus\n");
+		printf("4: 3 Band EQ\n");
+		printf("5: Flanger\n");
 		
-		printf("Select Pedal to Adjust:/n");
-		printf("1: Distortion/n");
-		printf("2: Loop/n");
-		printf("3: Chorus/n");
-		printf("4: 3 Band EQ/n");
-		printf("5: Flanger/n");
-		
+		//select = getchar();
 		scanf("%d", &select);
-		
 		loop = 1;
 		
-		switch(select)
+		
+		if(select == 1)
 		{
-			if(select == 1)
+			while(loop)
 			{
-				while(loop)
-				{
-					printf("Distortion/n");
-					printf("Enter selection followed by desired new value/n");
-					printf("1: Enabled - %d/n", dist_en);
-					printf("2: Gain - Current Value = %d/n",dist_gain);
-					printf("3: Level - Current Value = %d/n",dist_level);					
-					printf("4: Exit/n");
-					scanf("%d%d", &select, %select_value );	
-					
-					if(select == 1)
-					{						
-						dist_en = select_value;
-					}
-					else if(select == 2)
-					{
-						dist_gain = select_value;
-					}
-					else if(select == 3)
-					{
-						dist_level = select_value;
-					}
-					else if(select == 4)
-					{
-						loop = 0;
-					}
-					
+				printf("Distortion\n");
+				printf("Enter selection followed by desired new value\n");
+				printf("1: Enabled - %d\n", dist_en);
+				printf("2: Gain - Current Value = %d\n",dist_gain);
+				printf("3: Level - Current Value = %d\n",dist_level);					
+				printf("4: Exit\n");
+				scanf("%d %d", &select, &select_value );	
+				
+				if(select == 1)
+				{						
+					dist_en = select_value;
 				}
-					
+				else if(select == 2)
+				{
+					dist_gain = select_value;
+				}
+				else if(select == 3)
+				{
+					dist_level = select_value;
+				}
+				else if(select == 4)
+				{
+					loop = 0;
+					goto Start;
+				}
+				
 			}
-			else if(select==2)
+				
+		}
+		else if(select == 2)
+		{
+			while(loop)
 			{
-				while(loop)
-				{
-					printf("Loop/n");
-					printf("Enter selection followed by desired new value/n");
-					printf("1: Enabled - %d/n", loop_en);				
-					printf("2: Exit/n");
-					scanf("%d%d", &select, %select_value );	
-					
-					if(select == 1)
-					{						
-						loop_en = select_value;
-					}
-					else if(select == 2)
-					{
-						loop = 0;
-					}
-					
+				printf("Loop\n");
+				printf("Enter selection followed by desired new value\n");
+				printf("1: Enabled - %d\n", loop_en);				
+				printf("2: Exit\n");
+				scanf("%d %d", &select, &select_value );	
+				
+				if(select == 1)
+				{						
+					loop_en = select_value;
 				}
+				else if(select == 2)
+				{
+					loop = 0;
+					goto Start;
+				}
+				
 			}
-			else if(select==3)
+		}
+		else if(select == 3)
+		{
+			while(loop)
 			{
-				while(loop)
-				{
-					printf("Chorus Effect/n");
-					printf("Enter selection followed by desired new value/n");
-					printf("1: Enabled - %d/n", chorus_en);
-					printf("2: Level - Current Value = %d/n",chorus_level);
-					printf("3: Depth - Current Value = %d/n",chorus_depth);
-					printf("4: Rate - Current Value = %d/n",chorus_rate);
-					printf("5: Exit/n");
-					scanf("%d%d", &select, %select_value );	
-					
-					if(select == 1)
-					{						
-						chorus_en = select_value;
-					}
-					else if(select == 2)
-					{
-						chorus_level = select_value;
-					}
-					else if(select == 3)
-					{
-						chorus_depth = select_value;
-					}
-					else if(select == 4)
-					{
-						chorus_rate = select_value;
-					}
-					else if(select == 5)
-					{
-						loop = 0;
-					}
-					
+				printf("Chorus Effect\n");
+				printf("Enter selection followed by desired new value\n");
+				printf("1: Enabled - %d\n", chorus_en);
+				printf("2: Level - Current Value = %d\n",chorus_level);
+				printf("3: Depth - Current Value = %d\n",chorus_depth);
+				printf("4: Rate - Current Value = %d\n",chorus_rate);
+				printf("5: Exit\n");
+				scanf("%d %d", &select, &select_value );	
+				
+				if(select == 1)
+				{						
+					chorus_en = select_value;
 				}
+				else if(select == 2)
+				{
+					chorus_level = select_value;
+				}
+				else if(select == 3)
+				{
+					chorus_depth = select_value;
+				}
+				else if(select == 4)
+				{
+					chorus_rate = select_value;
+				}
+				else if(select == 5)
+				{
+					loop = 0;
+					goto Start;
+				}
+				
 			}
-			else if(select==4)
+		}
+		else if(select == 4)
+		{
+			while(loop)
 			{
-				while(loop)
-				{
-					printf("3 Band EQ/n");
-					printf("Enter selection followed by desired new value/n");
-					printf("1: Enabled - %d/n", eq_en);
-					printf("2: Low - Current Value = %d/n",eq_low);
-					printf("3: Mid - Current Value = %d/n",eq_mid);
-					printf("4: High - Current Value = %d/n",eq_high);
-					printf("5: Exit/n");
-					scanf("%d%d", &select, %select_value );	
-					
-					if(select == 1)
-					{						
-						eq_en = select_value;
-					}
-					else if(select == 2)
-					{
-						eq_low = select_value;
-					}
-					else if(select == 3)
-					{
-						eq_mid = select_value;
-					}
-					else if(select == 4)
-					{
-						eq_high = select_value;
-					}
-					else if(select == 5)
-					{
-						loop = 0;
-					}
-					
+				printf("3 Band EQ\n");
+				printf("Enter selection followed by desired new value\n");
+				printf("1: Enabled - %d\n", eq_en);
+				printf("2: Low - Current Value = %d\n",eq_low);
+				printf("3: Mid - Current Value = %d\n",eq_mid);
+				printf("4: High - Current Value = %d\n",eq_high);
+				printf("5: Exit\n");
+				scanf("%d %d", &select, &select_value );	
+				
+				if(select == 1)
+				{						
+					eq_en = select_value;
 				}
+				else if(select == 2)
+				{
+					eq_low = select_value;
+				}
+				else if(select == 3)
+				{
+					eq_mid = select_value;
+				}
+				else if(select == 4)
+				{
+					eq_high = select_value;
+				}
+				else if(select == 5)
+				{
+					loop = 0;
+					goto Start;
+				}
+				
 			}
-			else if(select==5)
+		}
+		else if(select == 5)
+		{
+			while(loop)
 			{
-				while(loop)
-				{
-					printf("Flanger Effect/n");
-					printf("Enter selection followed by desired new value/n");
-					printf("1: Enabled - %d/n", flanger_en);
-					printf("2: Speed - Current Value = %d/n",flanger_speed);
-					printf("3: Depth - Current Value = %d/n",flanger_depth);
-					printf("4: Delay Time - Current Value = %d/n",flanger_delayTime);
-					printf("5: Exit/n");
-					scanf("%d%d", &select, %select_value );	
-					
-					if(select == 1)
-					{						
-						flanger_en = select_value;
-					}
-					else if(select == 2)
-					{
-						flanger_speed = select_value;
-					}
-					else if(select == 3)
-					{
-						flanger_depth = select_value;
-					}
-					else if(select == 4)
-					{
-						flanger_delayTime = select_value;
-					}
-					else if(select == 5)
-					{
-						loop = 0;
-					}
-					
+				printf("Flanger Effect\n");
+				printf("Enter selection followed by desired new value\n");
+				printf("1: Enabled - %d\n", flanger_en);
+				printf("2: Speed - Current Value = %d\n",flanger_speed);
+				printf("3: Depth - Current Value = %d\n",flanger_depth);
+				printf("4: Delay Time - Current Value = %d\n",flanger_delayTime);
+				printf("5: Exit\n");
+				scanf("%d", &select, &select_value);	
+				
+				if(select == 1)
+				{						
+					flanger_en = select_value;
 				}
+				else if(select == 2)
+				{
+					flanger_speed = select_value;
+				}
+				else if(select == 3)
+				{
+					flanger_depth = select_value;
+				}
+				else if(select == 4)
+				{
+					flanger_delayTime = select_value;
+				}
+				else if(select == 5)
+				{
+					loop = 0;
+					goto Start;
+				}
+				
 			}
 		}
 	}
